@@ -95,6 +95,36 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
+  // Augmented state vector
+  Eigen::VectorXd x_aug_;
+    // Augmented state covariance_matrix
+  Eigen::MatrixXd P_aug_;
+  Eigen::MatrixXd Q_;
+  Eigen::MatrixXd Xsig_aug_;
+  Eigen::MatrixXd A_;
+
+  int n_z_radar_;
+  int n_z_lidar_;
+
+  Eigen::MatrixXd Zsig_radar_;
+  Eigen::MatrixXd Zsig_lidar_;
+  Eigen::MatrixXd S_radar_;
+
+  Eigen::VectorXd z_pred_radar_;    // predicted radar measurements
+  Eigen::MatrixXd R_radar_;
+  Eigen::MatrixXd Tc_radar_;
+
+  Eigen::VectorXd z_pred_lidar_;    // predicted lidar measurements
+
+  Eigen::VectorXd z_radar_;         // actual radar measurements
+  Eigen::VectorXd z_lidar_;         // actual lidar measurements
+
+  // lidar using KF update step because it's a linear model and no need for linearization (EKF) or measurement sigma point prediction and update (UKF)
+  Eigen::MatrixXd H_;
+  Eigen::MatrixXd S_lidar_;
+  Eigen::MatrixXd R_lidar_;
+
+
 };
 
 #endif  // UKF_H
