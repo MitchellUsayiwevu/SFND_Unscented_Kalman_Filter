@@ -128,10 +128,17 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
    */
 
   if(meas_package.sensor_type_ ==MeasurementPackage::LASER){
+
       if(is_initialized_){
+          double dt = static_cast<double>(meas_package.timestamp_ - time_us_) / 1000000.0;
+          time_us_ = meas_package.timestamp_;
+
+          // predict
+          Prediction(dt);
           UpdateLidar(meas_package);
       }
       else {
+          time_us_ = meas_package.timestamp_;
           // initialize the state with lidar measurements
           x_(0) = meas_package.raw_measurements_(0) ;
           x_(1) = meas_package.raw_measurements_(1);
@@ -143,10 +150,16 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   }
   else if(meas_package.sensor_type_ ==MeasurementPackage::RADAR) {
       if(is_initialized_) {
+          double dt = static_cast<double>(meas_package.timestamp_ - time_us_) / 1000000.0;
+          time_us_ = meas_package.timestamp_;
+
+          // predict
+          Prediction(dt);
           UpdateRadar(meas_package);
       }
       else{
           //initialize the state with radar measurements
+          time_us_ = meas_package.timestamp_;
           double rho = meas_package.raw_measurements_(0);
           double phi = meas_package.raw_measurements_(1);
           double rho_dot = meas_package.raw_measurements_(2);
